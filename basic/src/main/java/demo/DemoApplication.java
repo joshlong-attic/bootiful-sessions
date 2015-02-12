@@ -16,6 +16,13 @@ import java.util.UUID;
 @SpringBootApplication
 public class DemoApplication {
 
+    /*
+     *  @Bean
+     *  JedisConnectionFactory connectionFactory() throws Exception {
+     *      return new JedisConnectionFactory();
+     *  }
+     */
+
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
     }
