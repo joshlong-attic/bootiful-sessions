@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.springframework.security:spring-security-config:4.0.0.CI-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-config/4.0.0.CI-SNAPSHOT/spring-security-config-4.0.0.CI-20150212.010057-410.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-config/4.0.0.CI-SNAPSHOT/spring-security-config-4.0.0.CI-20150212.010057-410-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-config/4.0.0.CI-SNAPSHOT/spring-security-config-4.0.0.CI-20150212.010057-410-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
