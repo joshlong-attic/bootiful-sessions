@@ -41,6 +41,12 @@ public class WebSecurityConfig
     protected void configure(HttpSecurity http) throws Exception {
 
         http
+            .csrf()
+                .ignoringAntMatchers("/chat/**")
+                .and()
+            .headers()
+                .frameOptions().sameOrigin()
+                .and()
             .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
