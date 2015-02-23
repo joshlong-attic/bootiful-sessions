@@ -28,10 +28,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 public class WebSocketConnectHandler<S> implements ApplicationListener<SessionConnectEvent> {
+
     private ActiveWebSocketUserRepository repository;
     private SimpMessageSendingOperations messagingTemplate;
 
-    public WebSocketConnectHandler(SimpMessageSendingOperations messagingTemplate, ActiveWebSocketUserRepository repository) {
+    public WebSocketConnectHandler(SimpMessageSendingOperations messagingTemplate,
+                                   ActiveWebSocketUserRepository repository) {
         super();
         this.messagingTemplate = messagingTemplate;
         this.repository = repository;
@@ -45,6 +47,7 @@ public class WebSocketConnectHandler<S> implements ApplicationListener<SessionCo
         }
         String id = SimpMessageHeaderAccessor.getSessionId(headers);
         repository.save(new ActiveWebSocketUser(id, user.getName(), Calendar.getInstance()));
-        messagingTemplate.convertAndSend("/topic/friends/signin", Arrays.asList(user.getName()));
+        messagingTemplate.convertAndSend("/topic/friends/signin",
+		        Arrays.asList(user.getName()));
     }
 }
