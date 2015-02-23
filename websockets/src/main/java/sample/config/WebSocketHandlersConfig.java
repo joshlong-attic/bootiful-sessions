@@ -24,7 +24,8 @@ import sample.websocket.WebSocketConnectHandler;
 import sample.websocket.WebSocketDisconnectHandler;
 
 /**
- * These handlers are separated from WebSocketConfig because they are specific to this application and do not demonstrate a typical Spring Session setup.
+ * These handlers are separated from WebSocketConfig because they
+ * are specific to this application and do not demonstrate a typical Spring Session setup.
  *
  * @author Rob Winch
  */

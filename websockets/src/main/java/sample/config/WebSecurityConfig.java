@@ -32,7 +32,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 // tag::enable-redis-httpsession[]
-@EnableRedisHttpSession//(maxInactiveIntervalInSeconds = 60)
+@EnableRedisHttpSession //(maxInactiveIntervalInSeconds = 60)
 public class WebSecurityConfig
     extends WebSecurityConfigurerAdapter {
 // end::enable-redis-httpsession[]
