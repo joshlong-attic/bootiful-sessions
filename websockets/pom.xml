@@ -73,8 +73,7 @@
             </plugin>
         </plugins>
     </build>
-<<<<<<< HEAD
-=======
+
 
     <repositories>
         <repository>
@@ -83,5 +82,4 @@
         </repository>
     </repositories>
 
->>>>>>> master
 </project>

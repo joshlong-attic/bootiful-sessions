@@ -44,6 +44,9 @@ import sample.data.ActiveWebSocketUserRepository;
 import sample.websocket.WebSocketConnectHandler;
 import sample.websocket.WebSocketDisconnectHandler;
 
+import static org.springframework.messaging.simp.SimpMessageType.MESSAGE;
+import static org.springframework.messaging.simp.SimpMessageType.SUBSCRIBE;
+
 /**
  * @author Rob Winch
  */
@@ -67,11 +70,16 @@ public class Application {
 	@EnableGlobalMethodSecurity(prePostEnabled = true)
 	@EnableRedisHttpSession
 	static class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 
 			http
+					.csrf()
+					.ignoringAntMatchers("/chat/**")
+					.and()
+					.headers()
+					.frameOptions().sameOrigin()
+					.and()
 					.authorizeRequests()
 					.anyRequest().authenticated()
 					.and()
@@ -113,7 +121,9 @@ public class Application {
 	@Configuration
 	@EnableScheduling
 	@EnableWebSocketMessageBroker
-	static class WebSocketConfig extends AbstractSessionWebSocketMessageBrokerConfigurer<ExpiringSession> {
+	static class WebSocketConfig
+			extends AbstractSessionWebSocketMessageBrokerConfigurer<ExpiringSession> {
+			// registers SessionRepositoryMessageInterceptor which updates HTTP session
 
 		protected void configureStompEndpoints(StompEndpointRegistry registry) {
 			registry.addEndpoint("/messages").withSockJS();
@@ -131,9 +141,20 @@ public class Application {
 		@Override
 		protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
 			messages
-					.simpMessageDestMatchers("/queue/**", "/topic/**").denyAll()
-					.simpSubscribeDestMatchers("/queue/**/*-user*", "/topic/**/*-user*").denyAll()
-					.anyMessage().authenticated();
+					// message types other than MESSAGE and SUBSCRIBE
+					.nullDestMatcher().authenticated()
+					// anyone can access the errors
+					.simpDestMatchers("/user/queue/errors").permitAll()
+					// matches any destination that starts with /app/
+					.simpDestMatchers("/app/**").authenticated()
+					// matches any destination for SimpMessageType.SUBSCRIBE that starts with /user/ or /topic/friends/
+					.simpSubscribeDestMatchers("/user/**", "/topic/friends/*").authenticated()
+
+					// (i.e. cannot send messages directly to /topic/, /queue/)
+					// (i.e. cannot subscribe to /topic/messages/* to get messages sent to /topic/messages-user<id>)
+					.simpTypeMatchers(MESSAGE, SUBSCRIBE).denyAll()
+					// catch all
+					.anyMessage().denyAll();
 		}
 	}
 
