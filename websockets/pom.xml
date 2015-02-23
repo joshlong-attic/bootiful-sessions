@@ -73,4 +73,15 @@
             </plugin>
         </plugins>
     </build>
+<<<<<<< HEAD
+=======
+
+    <repositories>
+        <repository>
+            <id>spring-snapshot</id>
+            <url>https://repo.spring.io/libs-snapshot</url>
+        </repository>
+    </repositories>
+
+>>>>>>> master
 </project>
