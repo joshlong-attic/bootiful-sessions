@@ -9,19 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
-/**
- * Verify the results:
- */
 @EnableRedisHttpSession
 @SpringBootApplication
 public class DemoApplication {
-
-    /*
-     *  @Bean
-     *  JedisConnectionFactory connectionFactory() throws Exception {
-     *      return new JedisConnectionFactory();
-     *  }
-     */
 
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
@@ -29,7 +19,7 @@ public class DemoApplication {
 }
 
 @RestController
-class ExampleController {
+class ExacmpleController {
 
     @RequestMapping("/")
     public String hello(HttpSession session) {
