@@ -88,4 +88,11 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>spring-snapshot</id>
+            <url>https://repo.spring.io/libs-snapshot</url>
+        </repository>
+    </repositories>
+
 </project>
