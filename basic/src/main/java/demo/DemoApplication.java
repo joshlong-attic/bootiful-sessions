@@ -9,26 +9,23 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
-@EnableRedisHttpSession
+@EnableRedisHttpSession  // will look for the RedisConnectionFactory that Boot provides
 @SpringBootApplication
+@RestController
 public class DemoApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
-    }
-}
+	public static void main(String[] args) {
+		SpringApplication.run(DemoApplication.class, args);
+	}
 
-@RestController
-class ExacmpleController {
-
-    @RequestMapping("/")
-    public String hello(HttpSession session) {
-        UUID uid = (UUID) session.getAttribute("uid");
-        if (uid == null) {
-            uid = UUID.randomUUID();
-        }
-        session.setAttribute("uid", uid);
-        return uid.toString();
-    }
+	@RequestMapping("/")
+	public String hello(HttpSession session) {
+		UUID uid = (UUID) session.getAttribute("uid");
+		if (uid == null) {
+			uid = UUID.randomUUID();
+		}
+		session.setAttribute("uid", uid);
+		return uid.toString();
+	}
 
 }
