@@ -33,34 +33,35 @@ import java.util.List;
  * Controller for managing {@link Message} instances.
  *
  * @author Rob Winch
- *
  */
 @Controller
 @RequestMapping("/")
 public class MessageController {
-    private SimpMessageSendingOperations messagingTemplate;
-    private ActiveWebSocketUserRepository activeUserRepository;
 
-    @Autowired
-    public MessageController(ActiveWebSocketUserRepository activeUserRepository,SimpMessageSendingOperations messagingTemplate) {
-        this.activeUserRepository = activeUserRepository;
-        this.messagingTemplate = messagingTemplate;
-    }
+	private SimpMessageSendingOperations messagingTemplate;
+	private ActiveWebSocketUserRepository activeUserRepository;
 
-    @RequestMapping("/")
-    public String im() {
-        return "index";
-    }
+	@Autowired
+	public MessageController(ActiveWebSocketUserRepository activeUserRepository,
+	                         SimpMessageSendingOperations messagingTemplate) {
+		this.activeUserRepository = activeUserRepository;
+		this.messagingTemplate = messagingTemplate;
+	}
 
-    @MessageMapping("/im")
-    public void im(InstantMessage im, @CurrentUser User currentUser) {
-        im.setFrom(currentUser.getEmail());
-        messagingTemplate.convertAndSendToUser(im.getTo(),"/queue/messages",im);
-        messagingTemplate.convertAndSendToUser(im.getFrom(),"/queue/messages",im);
-    }
+	@RequestMapping("/")
+	public String im() {
+		return "index";
+	}
 
-    @SubscribeMapping("/users")
-    public List<String> subscribeMessages() throws Exception {
-        return activeUserRepository.findAllActiveUsers();
-    }
+	@MessageMapping("/im")
+	public void im(InstantMessage im, @CurrentUser User currentUser) {
+		im.setFrom(currentUser.getEmail());
+		messagingTemplate.convertAndSendToUser(im.getTo(), "/queue/messages", im);
+		messagingTemplate.convertAndSendToUser(im.getFrom(), "/queue/messages", im);
+	}
+
+	@SubscribeMapping("/users")
+	public List<String> subscribeMessages() throws Exception {
+		return activeUserRepository.findAllActiveUsers();
+	}
 }

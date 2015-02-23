@@ -6,47 +6,26 @@
     <groupId>io.pivotal.spring.session</groupId>
     <artifactId>parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+
     <packaging>pom</packaging>
 
-<modules>
-  <module>basic</module>
-  <module>rest</module>
-  <module>websockets</module>
-</modules>
+    <modules>
+        <module>basic</module>
+        <module>rest</module>
+        <module>websockets</module>
+    </modules>
+
+    <properties>
+        <spring-security.version>4.0.0.CI-SNAPSHOT</spring-security.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+    </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.2.1.RELEASE</version>
     </parent>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-    </properties>
-<!--
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session-data-redis</artifactId>
-            <version>1.0.0.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-redis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>  -->
 
     <build>
         <plugins>

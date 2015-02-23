@@ -4,26 +4,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-    <groupId>io.pivotal.spring.session</groupId>
-    <artifactId>parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-
-  <artifactId>websockets</artifactId>
-
-     <properties>
-        <spring-security.version>4.0.0.CI-SNAPSHOT</spring-security.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-    </properties>
-
+        <groupId>io.pivotal.spring.session</groupId>
+        <artifactId>parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>websockets</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
             <version>1.0.0.RELEASE</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -74,7 +65,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -83,5 +73,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -3,6 +3,7 @@ package sample.data;
 import java.util.Calendar;
 
 public class InstantMessage {
+
 	private String to;
 	
 	private String from;
@@ -42,7 +43,4 @@ public class InstantMessage {
 	public void setCreated(Calendar created) {
 		this.created = created;
 	}
-	
-	
-
 }

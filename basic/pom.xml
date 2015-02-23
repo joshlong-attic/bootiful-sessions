@@ -3,15 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-        <parent>
+    <parent>
         <groupId>io.pivotal.spring.session</groupId>
         <artifactId>parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-      </parent>
+    </parent>
 
-      <artifactId>basic</artifactId>
+    <artifactId>basic</artifactId>
 
- 
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,10 +23,10 @@
             <artifactId>spring-session-data-redis</artifactId>
             <version>1.0.0.RELEASE</version>
         </dependency>
-      <!--  <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>-->
+        <!--  <dependency>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-starter-security</artifactId>
+          </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-redis</artifactId>
