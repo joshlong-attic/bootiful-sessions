@@ -27,7 +27,8 @@ public class WebSocketDisconnectHandler<S> implements ApplicationListener<Sessio
     private ActiveWebSocketUserRepository repository;
     private SimpMessageSendingOperations messagingTemplate;
 
-    public WebSocketDisconnectHandler(SimpMessageSendingOperations messagingTemplate, ActiveWebSocketUserRepository repository) {
+    public WebSocketDisconnectHandler(SimpMessageSendingOperations messagingTemplate,
+                                      ActiveWebSocketUserRepository repository) {
         super();
         this.messagingTemplate = messagingTemplate;
         this.repository = repository;
