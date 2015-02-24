@@ -95,7 +95,7 @@ class LinkHandler {
 				continue;
 			}
 
-			Principal userPrincipal = httpRequest.getUserPrincipal();
+			Principal userPrincipal = session.getAttribute("username");
 			if (null != userPrincipal) {
 				String username = userPrincipal.getName();
 				model.addAttribute("username", username);
@@ -110,7 +110,8 @@ class LinkHandler {
 				Account account = new Account(username, logoutUrl, switchAccountUrl);
 				if (currentSessionAlias.equals(alias)) {
 					currentAccount = account;
-				} else {
+				}
+				else {
 					accounts.add(account);
 				}
 			}
