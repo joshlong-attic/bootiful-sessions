@@ -30,12 +30,24 @@
                                  <li><a id="logout" th:href="${currentAccount.logoutUrl}">Log Out</a></li>
                                  <li><a id="addAccount" th:href="${addAccountUrl}">Add Account</a></li>
                             </span>
+                            <span th:if="!${accounts.empty}">
+                                <li class="divider"></li>
+                                <li class="dropdown-header">Switch Account</li>
+                                <li class="divider"></li>
+                            </span>
+
+                            <li th:each="account : ${accounts}">
+
+                                <a th:id="'switchAccount' + ${account.username}" th:href="${account.switchAccountUrl}">
+                                    <span th:text="${account.username}"/>
+                                </a>
+                            </li>
+
+
                             <!--
 
                                      <c:if test="${not empty accounts}">
-                                         <li class="divider"></li>
-                                         <li class="dropdown-header">Switch Account</li>
-                                         <li class="divider"></li>
+
                                      </c:if>
                                      <c:forEach items="${accounts}" var="account">
                                          <li><a id="switchAccount${account.username}" href="${account.switchAccountUrl}"><c:out value="${account.username}"/></a></li>
@@ -51,4 +63,5 @@
 </nav>
 
 
-</body></html>
+</body>
+</html>
