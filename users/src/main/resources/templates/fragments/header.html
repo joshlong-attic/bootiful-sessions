@@ -18,7 +18,7 @@
                     <a id="navLink" href="/link" th:href="@{/link}">Link</a>
                 </li>
             </ul>
-            <span th:if="${currentAccount  != null  }">
+            <span th:if="${currentAccount  != null} or !${accounts.empty}">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
