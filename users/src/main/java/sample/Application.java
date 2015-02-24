@@ -73,6 +73,9 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
+				.sessionManagement()
+					.enableSessionUrlRewriting(true)
+					.and()
 				.authorizeRequests()
 					.antMatchers("/").permitAll()
 					.and()
