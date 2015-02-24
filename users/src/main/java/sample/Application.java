@@ -99,6 +99,8 @@ class LinkHandler {
 
 		Map<String, String> sessionIds = sessionManager.getSessionIds(httpRequest);
 
+		model.addAttribute("username", httpRequest.getRemoteUser());
+
 		String unauthenticatedAlias = null;
 		String contextPath = httpRequest.getContextPath();
 		List<Account> accounts = new ArrayList<>();
@@ -117,8 +119,6 @@ class LinkHandler {
 				Principal userPrincipal = context.getAuthentication();
 				if(userPrincipal != null) {
 					String username = userPrincipal.getName();
-					model.addAttribute("username", username);
-					System.out.println("username: " + username);
 					if (username == null) {
 						unauthenticatedAlias = alias;
 						continue;
