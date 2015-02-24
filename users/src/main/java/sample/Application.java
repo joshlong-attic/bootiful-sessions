@@ -95,7 +95,7 @@ class LinkHandler {
 				continue;
 			}
 
-			Principal userPrincipal = session.getAttribute("username");
+			Principal userPrincipal = httpRequest.getUserPrincipal();
 			if (null != userPrincipal) {
 				String username = userPrincipal.getName();
 				model.addAttribute("username", username);
