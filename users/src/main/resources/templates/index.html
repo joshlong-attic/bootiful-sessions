@@ -1,0 +1,128 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-3.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Demonstrates Multi User Log In</title>
+    <link rel="stylesheet" th:href="@{/assets/bootstrap.min.css}"></link>
+    <style type="text/css">
+        body {
+            padding: 1em;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="container">
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="https://github.com/spring-projects/spring-session/">Spring Session</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a id="navHome" th:href="@{/}">Home</a></li>
+                    <li>
+                        <a id="navLink" th:href="@{/link}">Link</a>
+                    </li>
+                </ul>
+                <span th:if="${currentAccount != null or  !accounts.isEmpty()}">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-expanded="false">
+                                <c:out value="${username}"/>
+                                <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <span th:if="${currentAccount != null}">
+                                    <li><a id="logout" href="${currentAccount.logoutUrl}">Log Out</a></li>
+                                    <li><a id="addAccount" href="${addAccountUrl}">Add Account</a></li>
+                                </span>
+                                <span test="!${ accounts.isEmpty() }">
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">Switch Account</li>
+                                    <li class="divider"></li>
+                                </span>
+                                <span th:each="account : ${accounts}" var="account">
+                                    <!--<c:set var="encodedUsername">
+                                        <c:out value="${account.username}"/>
+                                    </c:set>-->
+                                    <span th:with="encodedUsername=${account.username}">
+                                      <span th:text="${account.username}"> account.username </span>
+                                      <li>
+                                          <a th:id="switchAccount${encodedUsername}"
+                                             th:href="${account.switchAccountUrl}"><span th:text="${account.username}">username</span>
+                                          </a>
+                                      </li>
+                                    </span>
+                                </span>
+                            </ul>
+                        </li>
+                    </ul>
+                </span>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+        <!--/.container-fluid -->
+    </nav>
+
+    <h1>Description</h1>
+
+    <p>This application demonstrates how to use Spring Session to authenticate as multiple users at a time. View
+        authenticated users in the upper right corner.</p>
+
+    <!--    <c:choose>-->
+    <spaN th:text="${username == null}">si null </spaN>
+
+        <span th:if="${username} == null">
+            <h1>Please Log In</h1>
+            <p>You are not currently authenticated with this session. You can authenticate with any username password
+                combination that are equal. A few examples to try:</p>
+            <ul>
+                <li><b>Username</b> rob and <b>Password</b> rob</li>
+                <li><b>Username</b> luke and <b>Password</b> luke</li>
+            </ul>
+            <span th:if="${param.error != null}">
+                <div id="error" class="alert alert-danger">Invalid username / password. Please ensure the username is
+                    the same as the password.
+                </div>
+            </span>
+            <!--<c:url value="/login" var="loginUrl"/>-->
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input id="username" type="text" name="username"/>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" name="password"/>
+                </div>
+                <input type="submit" value="Login"/>
+            </form>
+        </span>
+
+         <span th:if="${username != null}">
+            <h1 id="un"><span th:text="${username}"> username </span></h1>
+            <p>You are authenticated as <b><span th:text="${username}"/></b>.
+                Observe that you can <a th:href="@{/link}">navigate links</a> and the correct session is used. Using the
+                links in the upper right corner you can:</p>
+            <ul>
+                <li>Log Out</li>
+                <li>Switch Accounts</li>
+                <li>Add Account</li>
+            </ul>
+        </span>
+    <!--    </c:choose>-->
+</div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="./assets/js/jquery.min.js"></script>
+<script src="./assets/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="./assets/js/ie10-viewport-bug-workaround.js"></script>
+
+
+</body>
+</html>
