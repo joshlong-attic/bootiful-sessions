@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Demonstrates Multi User Log In</title>
-    <link rel="stylesheet" th:href="@{/assets/bootstrap.min.css}"></link>
+    <link rel="stylesheet" th:href="@{/bootstrap.min.css}"/>
     <style type="text/css">
         body {
             padding: 1em;
@@ -12,60 +12,12 @@
 </head>
 <body>
 
-
 <div class="container">
-    <!-- Static navbar -->
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="https://github.com/spring-projects/spring-session/">Spring Session</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a id="navHome" th:href="@{/}">Home</a></li>
-                    <li>
-                        <a id="navLink" th:href="@{/link}">Link</a>
-                    </li>
-                </ul>
-                <span th:if="${currentAccount != null or  !accounts.isEmpty()}">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                               aria-expanded="false">
-                                <c:out value="${username}"/>
-                                <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <span th:if="${currentAccount != null}">
-                                    <li><a id="logout" href="${currentAccount.logoutUrl}">Log Out</a></li>
-                                    <li><a id="addAccount" href="${addAccountUrl}">Add Account</a></li>
-                                </span>
-                                <span test="!${ accounts.isEmpty() }">
-                                    <li class="divider"></li>
-                                    <li class="dropdown-header">Switch Account</li>
-                                    <li class="divider"></li>
-                                </span>
-                                <span th:each="account : ${accounts}" var="account">
-                                    <!--<c:set var="encodedUsername">
-                                        <c:out value="${account.username}"/>
-                                    </c:set>-->
-                                    <span th:with="encodedUsername=${account.username}">
-                                      <span th:text="${account.username}"> account.username </span>
-                                      <li>
-                                          <a th:id="switchAccount${encodedUsername}"
-                                             th:href="${account.switchAccountUrl}"><span th:text="${account.username}">username</span>
-                                          </a>
-                                      </li>
-                                    </span>
-                                </span>
-                            </ul>
-                        </li>
-                    </ul>
-                </span>
-            </div>
-            <!--/.nav-collapse -->
-        </div>
-        <!--/.container-fluid -->
-    </nav>
+
+
+    <div th:replace="fragments/header :: header">...</div>
+
+
 
     <h1>Description</h1>
 
@@ -118,10 +70,10 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="./assets/js/jquery.min.js"></script>
-<script src="./assets/js/bootstrap.min.js"></script>
+<script th:src="@{/jquery.min.js}"></script>
+<script th:src="@{/bootstrap.min.js}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="./assets/js/ie10-viewport-bug-workaround.js"></script>
+<script th:src="@{/ie10-viewport-bug-workaround.js}"></script>
 
 
 </body>

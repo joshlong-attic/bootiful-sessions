@@ -18,6 +18,7 @@ package sample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.session.Session;
@@ -26,11 +27,14 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 import org.springframework.session.web.http.HttpSessionManager;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.*;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,43 +44,45 @@ import java.util.Map;
  */
 @SpringBootApplication
 @EnableRedisHttpSession
-@EnableWebSecurity
 public class Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
 
+}
+
+@EnableWebSecurity
+@Configuration
+class WebSecurityConfig {
+
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth
+
 				.inMemoryAuthentication()
-						.withUser("rob").password("rob").roles("USER")
-					.and()
-						.withUser("luke").password("luke").roles("USER");
-		;
+				.withUser("rob").password("rob").roles("USER")
+				.and()
+				.withUser("luke").password("luke").roles("USER");
+
 	}
 }
 
 @Component
-class UserAccountsFilter implements Filter {
-
-	public void init(FilterConfig filterConfig) throws ServletException {
-	}
+class LinkHandler {
 
 	@SuppressWarnings("unchecked")
-	public void doFilter(ServletRequest request, ServletResponse response,
-	                     FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		HttpSessionManager sessionManager =
-				(HttpSessionManager) httpRequest.getAttribute(HttpSessionManager.class.getName());
-		SessionRepository<Session> repo =
-				(SessionRepository<Session>) httpRequest.getAttribute(SessionRepository.class.getName());
+	void setupLinks(HttpServletRequest httpRequest, Model model) throws IOException, ServletException {
+
+		HttpSessionManager sessionManager = (HttpSessionManager) httpRequest.getAttribute(HttpSessionManager.class.getName());
+
+		SessionRepository<Session> repo = (SessionRepository<Session>) httpRequest.getAttribute(SessionRepository.class.getName());
 
 		String currentSessionAlias = sessionManager.getCurrentSessionAlias(httpRequest);
-		Map<String, String> sessionIds = sessionManager.getSessionIds(httpRequest);
-		String unauthenticatedAlias = null;
 
+		Map<String, String> sessionIds = sessionManager.getSessionIds(httpRequest);
+
+		String unauthenticatedAlias = null;
 		String contextPath = httpRequest.getContextPath();
 		List<Account> accounts = new ArrayList<>();
 		Account currentAccount = null;
@@ -89,19 +95,24 @@ class UserAccountsFilter implements Filter {
 				continue;
 			}
 
-			String username = session.getAttribute("username");
-			if (username == null) {
-				unauthenticatedAlias = alias;
-				continue;
-			}
+			Principal userPrincipal = httpRequest.getUserPrincipal();
+			if (null != userPrincipal) {
+				String username = userPrincipal.getName();
+				model.addAttribute("username", username);
+				System.out.println("username: " + username);
+				if (username == null) {
+					unauthenticatedAlias = alias;
+					continue;
+				}
 
-			String logoutUrl = sessionManager.encodeURL("./logout", alias);
-			String switchAccountUrl = sessionManager.encodeURL("./", alias);
-			Account account = new Account(username, logoutUrl, switchAccountUrl);
-			if (currentSessionAlias.equals(alias)) {
-				currentAccount = account;
-			} else {
-				accounts.add(account);
+				String logoutUrl = sessionManager.encodeURL("./logout", alias);
+				String switchAccountUrl = sessionManager.encodeURL("./", alias);
+				Account account = new Account(username, logoutUrl, switchAccountUrl);
+				if (currentSessionAlias.equals(alias)) {
+					currentAccount = account;
+				} else {
+					accounts.add(account);
+				}
 			}
 		}
 
@@ -112,27 +123,41 @@ class UserAccountsFilter implements Filter {
 		String addAccountUrl = sessionManager.encodeURL(contextPath, addAlias); // <4>
 		// end::addAccountUrl[]
 
-		httpRequest.setAttribute("currentAccount", currentAccount);
-		httpRequest.setAttribute("addAccountUrl", addAccountUrl);
-		httpRequest.setAttribute("accounts", accounts);
 
-		chain.doFilter(request, response);
+		model.addAttribute("currentAccount", currentAccount);
+		model.addAttribute("addAccountUrl", addAccountUrl);
+		model.addAttribute("accounts", accounts);
+
+
 	}
 
-	public void destroy() {
-	}
 
 }
 
 @Controller
 class UsersController {
+
+	@Autowired
+	private LinkHandler linkHandler;
+
+	@RequestMapping("/logout")
+	String logout(HttpServletRequest r, Model model, HttpSession session) throws Exception {
+		if (session != null) {
+			session.invalidate();
+		}
+		this.linkHandler.setupLinks(r, model);
+		return "redirect:/";
+	}
+
 	@RequestMapping("/")
-	public String index() {
+	String index(HttpServletRequest r, Model model) throws Exception {
+		this.linkHandler.setupLinks(r, model);
 		return "index";
 	}
 
 	@RequestMapping("/link")
-	public String link() {
+	String link(HttpServletRequest r, Model model) throws Exception {
+		this.linkHandler.setupLinks(r, model);
 		return "link";
 	}
 }
@@ -147,7 +172,7 @@ class Account {
 	public Account(String username,
 	               String logoutUrl,
 	               String switchAccountUrl) {
- 		this.username = username;
+		this.username = username;
 		this.logoutUrl = logoutUrl;
 		this.switchAccountUrl = switchAccountUrl;
 	}
