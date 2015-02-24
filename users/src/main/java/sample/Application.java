@@ -64,7 +64,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth
 
-			.inMemoryAuthentication()
+				.inMemoryAuthentication()
 				.withUser("rob").password("rob").roles("USER").and()
 				.withUser("luke").password("luke").roles("USER");
 
@@ -74,17 +74,17 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 				.sessionManagement()
-					.enableSessionUrlRewriting(true)
-					.and()
+				.enableSessionUrlRewriting(true)
+				.and()
 				.authorizeRequests()
-					.antMatchers("/").permitAll()
-					.and()
+				.antMatchers("/").permitAll()
+				.and()
 				.logout()
-					.permitAll()
-					.and()
+				.permitAll()
+				.and()
 				.formLogin()
-					.loginPage("/")
-					.loginProcessingUrl("/login");
+				.loginPage("/")
+				.loginProcessingUrl("/login");
 	}
 }
 
@@ -120,7 +120,7 @@ class LinkHandler {
 			SecurityContext context = session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
 			if (null != context) {
 				Principal userPrincipal = context.getAuthentication();
-				if(userPrincipal != null) {
+				if (userPrincipal != null) {
 					String username = userPrincipal.getName();
 					if (username == null) {
 						unauthenticatedAlias = alias;
@@ -191,8 +191,8 @@ class Account {
 	private String switchAccountUrl;
 
 	public Account(String username,
-				   String logoutUrl,
-				   String switchAccountUrl) {
+	               String logoutUrl,
+	               String switchAccountUrl) {
 		this.username = username;
 		this.logoutUrl = logoutUrl;
 		this.switchAccountUrl = switchAccountUrl;
