@@ -20,7 +20,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.session.Session;
 import org.springframework.session.SessionRepository;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
@@ -54,17 +58,30 @@ public class Application {
 
 @EnableWebSecurity
 @Configuration
-class WebSecurityConfig {
+class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth
 
-				.inMemoryAuthentication()
-				.withUser("rob").password("rob").roles("USER")
-				.and()
+			.inMemoryAuthentication()
+				.withUser("rob").password("rob").roles("USER").and()
 				.withUser("luke").password("luke").roles("USER");
 
+	}
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+				.authorizeRequests()
+					.antMatchers("/").permitAll()
+					.and()
+				.logout()
+					.permitAll()
+					.and()
+				.formLogin()
+					.loginPage("/")
+					.loginProcessingUrl("/login");
 	}
 }
 
@@ -95,24 +112,26 @@ class LinkHandler {
 				continue;
 			}
 
-			Principal userPrincipal = httpRequest.getUserPrincipal();
-			if (null != userPrincipal) {
-				String username = userPrincipal.getName();
-				model.addAttribute("username", username);
-				System.out.println("username: " + username);
-				if (username == null) {
-					unauthenticatedAlias = alias;
-					continue;
-				}
+			SecurityContext context = session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+			if (null != context) {
+				Principal userPrincipal = context.getAuthentication();
+				if(userPrincipal != null) {
+					String username = userPrincipal.getName();
+					model.addAttribute("username", username);
+					System.out.println("username: " + username);
+					if (username == null) {
+						unauthenticatedAlias = alias;
+						continue;
+					}
 
-				String logoutUrl = sessionManager.encodeURL("./logout", alias);
-				String switchAccountUrl = sessionManager.encodeURL("./", alias);
-				Account account = new Account(username, logoutUrl, switchAccountUrl);
-				if (currentSessionAlias.equals(alias)) {
-					currentAccount = account;
-				}
-				else {
-					accounts.add(account);
+					String logoutUrl = sessionManager.encodeURL("./logout", alias);
+					String switchAccountUrl = sessionManager.encodeURL("./", alias);
+					Account account = new Account(username, logoutUrl, switchAccountUrl);
+					if (currentSessionAlias.equals(alias)) {
+						currentAccount = account;
+					} else {
+						accounts.add(account);
+					}
 				}
 			}
 		}
@@ -169,8 +188,8 @@ class Account {
 	private String switchAccountUrl;
 
 	public Account(String username,
-	               String logoutUrl,
-	               String switchAccountUrl) {
+				   String logoutUrl,
+				   String switchAccountUrl) {
 		this.username = username;
 		this.logoutUrl = logoutUrl;
 		this.switchAccountUrl = switchAccountUrl;
