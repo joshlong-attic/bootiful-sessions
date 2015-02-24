@@ -116,12 +116,10 @@ class LinkHandler {
 			}
 		}
 
-		// tag::addAccountUrl[]
 		String addAlias = unauthenticatedAlias == null ? // <1>
 				sessionManager.getNewSessionAlias(httpRequest) : // <2>
 				unauthenticatedAlias; // <3>
 		String addAccountUrl = sessionManager.encodeURL(contextPath, addAlias); // <4>
-		// end::addAccountUrl[]
 
 
 		model.addAttribute("currentAccount", currentAccount);
